@@ -9,18 +9,23 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-/**
- * php think build 自动生成应用的目录结构的定义示例
- */
+use think\facade\Route;
+
+Route::get('think', function () {
+    return 'hello,ThinkPHP5!';
+});
+
+Route::get('hello/:name', 'index/hello');
+
+Route::resource('author', 'Author');
+Route::resource('category', 'Category');
+Route::resource('comment', 'Comment');
+Route::resource('article', 'Article');
+
+Route::get('login', 'Auth/login');
+Route::get('logout', 'Auth/logout');
+
+
 return [
-    // 需要自动创建的文件
-    '__file__'   => [],
-    // 需要自动创建的目录
-    '__dir__'    => ['controller', 'model', 'view'],
-    // 需要自动创建的控制器
-    'controller' => ['Index'],
-    // 需要自动创建的模型
-    'model'      => ['User'],
-    // 需要自动创建的模板
-    'view'       => ['index/index'],
+
 ];
