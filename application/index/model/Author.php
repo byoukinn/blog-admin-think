@@ -17,6 +17,7 @@ class Author extends Model
 
     public function login() {
         session('AUTH', $this);
+
     }
 
     public function logout() {

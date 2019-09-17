@@ -8,21 +8,39 @@
 
 namespace app\index\controller;
 
-use app\index\model\Comment as mAuthor;
+use app\index\model\Author as mAuthor;
 use think\Controller;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\facade\Request;
 
-class Auth extends Controller
+class Auth
 {
-    protected function login() {
-        $data = json_decode(Request::param('data'), true);
-        $author = new mAuthor;
+    public function login() {
+        $data = Request::param('data');
+        $model = new mAuthor;
         $validate = new \app\index\validate\Login;
-        if (!$validate->check($data)) {
-            $author->login();
+        if ($validate->check($data)) {
+            try {
+                $author = $model->where('username', $data['username'])->findOrFail();
+                if ($author['password'] == $data['password']) {
+                    $model->login();
+                    return ['msg' => '登录成功', 'code' => 200];
+                } else {
+                    return ['msg' => '密码错误', 'code' => 10003];
+                }
+            } catch (DataNotFoundException $e) {
+                return ['msg' => $e->getMessage(), 'code' => 10005];
+            } catch (ModelNotFoundException $e) {
+                return ['msg' => '该用户不存在', 'code' => 10004];
+            } catch (DbException $e) {
+                return ['msg' => '数据库出错 ' . $e->getMessage(), 'code' => 10006];
+            }
         } else {
-            return ['result' => $validate->getError()];
+            return ['msg' => $validate->getError(), 'code' => 10001];
         }
+
     }
 
     protected function logout() {

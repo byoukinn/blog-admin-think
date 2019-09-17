@@ -2,11 +2,10 @@
 
 namespace app\index\controller;
 
-use app\index\model\Comment as mAuthor;
+use app\index\model\Article as mArticle;
 use think\Controller;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
-use think\Exception;
 use think\exception\DbException;
 use think\exception\PDOException;
 use think\facade\Request;
@@ -16,7 +15,8 @@ class Article
     public function index($page = 1, $rowSize = 20)
     {
         try {
-            return mAuthor::limit(($page - 1) * $rowSize, $rowSize)->select();
+            $data = mArticle::limit(($page - 1) * $rowSize, $rowSize)->select();
+            return ['code' => 200, 'msg' => '成功', 'data' => $data];
         } catch (DataNotFoundException $e) {
         } catch (ModelNotFoundException $e) {
         } catch (DbException $e) {
@@ -29,38 +29,34 @@ class Article
 
     public function delete($id)
     {
-        $result =  mAuthor::destroy($id);
-        return  ['result' => $result ? '删除成功' : '删除失败'];
+        $result =  mArticle::destroy($id);
+        return  ['msg' => $result ? '删除成功' : '删除失败'];
     }
 
     public function update($id)
     {
         // 修改
         try {
-            $result = mAuthor::where(['id'=> r])->update();
+            $result = mArticle::where(['id'=> $id])->update();
         } catch (PDOException $e) {
         } catch (Exception $e) {
         }
-        return  ['result' => $result ? '更新成功' : '更新失败'];
+        return  ['msg' => $result ? '更新成功' : '更新失败'];
     }
-
     public function save()
     {
-//        post 请求，'/author'
-        $req = Request::param('data');
-        $data = json_decode($req, true);
-        $author = new mAuthor;
-        // 验证表单
-        $validate = new \app\index\validate\Register;
-        if ($validate->check($data)) {
-            try {
-                $result = $author->data($data)->save();
-                return ['result' => $result ? '注册成功' : '注册失败'];
-            } catch (PDOException $e) {
-                return ['result' => '用户名已注册'];
-            }
-        } else {
-            return ['result' => $validate->getError()];
+        $data = Request::param('data');
+        $article = new mArticle();
+        $result = $article->data($data)->save();
+        return ['msg' => $result ? '插入成功' : '插入失败', 'code' => $result ? 200 : 10009];
+    }
+
+    public function batchSave()
+    {
+        $data = Request::param('data');
+        // 批量写入
+        foreach ($data as $d) {
+            mArticle::create($d);
         }
     }
 

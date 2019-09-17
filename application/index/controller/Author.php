@@ -30,7 +30,7 @@ class Author
     public function delete($id)
     {
         $result =  mAuthor::destroy($id);
-        return  ['result' => $result ? '删除成功' : '删除失败'];
+        return  ['msg' => $result ? '删除成功' : '删除失败'];
     }
 
     public function update($id)
@@ -41,7 +41,7 @@ class Author
         } catch (PDOException $e) {
         } catch (Exception $e) {
         }
-        return  ['result' => $result ? '更新成功' : '更新失败'];
+        return  ['msg' => $result ? '更新成功' : '更新失败'];
     }
 
     public function save()
@@ -55,12 +55,12 @@ class Author
         if ($validate->check($data)) {
             try {
                 $result = $author->data($data)->save();
-                return ['result' => $result ? '注册成功' : '注册失败'];
+                return ['msg' => $result ? '注册成功' : '注册失败'];
             } catch (PDOException $e) {
-                return ['result' => '用户名已注册'];
+                return ['msg' => '用户名已注册'];
             }
         } else {
-            return ['result' => $validate->getError()];
+            return ['msg' => $validate->getError()];
         }
     }
 

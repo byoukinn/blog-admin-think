@@ -21,9 +21,10 @@ Route::resource('author', 'Author');
 Route::resource('category', 'Category');
 Route::resource('comment', 'Comment');
 Route::resource('article', 'Article');
+Route::post('article/batch', 'Article/batchSave');
 
-Route::get('login', 'Auth/login');
-Route::get('logout', 'Auth/logout');
+Route::post('login', 'Auth/login');
+Route::post('logout', 'Auth/logout');
 
 
 return [
