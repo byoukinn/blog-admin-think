@@ -10,3 +10,23 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+
+function _response($msg, $data, $code)
+{
+    $body = ['code' => $code, 'msg' => $msg];
+    if (!empty($data)) {
+        $body['data'] = $data;
+    }
+    return $body;
+}
+function success($msg, $data = [], $code = 200)
+{
+    return _response($msg, $data, $code);
+}
+
+function error($msg, $data = [], $code = 10000)
+{
+    return _response($msg, $data, $code);
+}
+
+

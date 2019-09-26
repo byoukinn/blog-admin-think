@@ -6,6 +6,7 @@ use app\index\model\Article as mArticle;
 use think\Controller;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
+use think\Exception;
 use think\exception\DbException;
 use think\exception\PDOException;
 use think\facade\Request;
@@ -36,12 +37,16 @@ class Article
     public function update($id)
     {
         // 修改
+        $data = Request::param('data');
+
         try {
-            $result = mArticle::where(['id'=> $id])->update();
+            $result = mArticle::where(['id'=> $id])->update($data);
         } catch (PDOException $e) {
+            return  ['msg' => $e->getMessage(), 'code' => 10012];
         } catch (Exception $e) {
+            return  ['msg' => $e->getMessage(), 'code' => 10013];
         }
-        return  ['msg' => $result ? '更新成功' : '更新失败'];
+        return  ['msg' => $result ? '更新成功' : '更新失败，没有修改任何字段', 'code' => $result ? 200 : 10009];
     }
     public function save()
     {
@@ -66,6 +71,7 @@ class Article
 
     public function edit()
     {
+
     }
 
 }

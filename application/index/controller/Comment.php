@@ -2,7 +2,7 @@
 
 namespace app\index\controller;
 
-use app\index\model\Author as mAuthor;
+use app\index\model\Comment as mComment;
 use think\Controller;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -11,12 +11,12 @@ use think\exception\DbException;
 use think\exception\PDOException;
 use think\facade\Request;
 
-class Author
+class Comment
 {
     public function index($page = 1, $rowSize = 20)
     {
         try {
-            $res = mAuthor::limit(($page - 1) * $rowSize, $rowSize)->select();
+            $res = mComment::limit(($page - 1) * $rowSize, $rowSize)->select();
             return success('成功', $res);
 
         } catch (DataNotFoundException $e) {
@@ -33,7 +33,7 @@ class Author
 
     public function delete($id)
     {
-        $result = mAuthor::destroy($id);
+        $result = mComment::destroy($id);
         return success($result ? '删除成功' : '删除失败');
     }
 
@@ -41,7 +41,7 @@ class Author
     {
         // 修改
         try {
-            $result = mAuthor::where(['id' => $id])->update();
+            $result = mComment::where(['id' => $id])->update();
         } catch (PDOException $e) {
         } catch (Exception $e) {
         }
@@ -52,15 +52,15 @@ class Author
     {
 //        post 请求，'/author'
         $data = Request::param('data');
-        $author = new mAuthor;
+        $author = new mComment;
         // 验证表单
         $validate = new \app\index\validate\Register;
         if ($validate->check($data)) {
             try {
                 $result = $author->data($data)->save();
-                return success($result ? '注册成功' : '注册失败');
+                return success($result ? '评论成功' : '评论失败');
             } catch (PDOException $e) {
-                return error('用户名已注册');
+                return error('该分类已被评论过');
             }
         } else {
             return error($validate->getError());
@@ -75,20 +75,4 @@ class Author
     {
     }
 
-    /**
-     * 前端检查是否存在的用户名
-     */
-    public function checkName()
-    {
-        try {
-            mAuthor::where("username", input('data')['username'])->findOrFail();
-        } catch (DataNotFoundException $e) {
-            return success($e->getMessage());
-        } catch (ModelNotFoundException $e) {
-            return success('该用户名可以注册');
-        } catch (DbException $e) {
-            return success($e->getMessage());
-        }
-        return error('该用户名已被存在');
-    }
 }

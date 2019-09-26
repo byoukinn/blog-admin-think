@@ -12,20 +12,29 @@
 use think\facade\Route;
 
 Route::get('think', function () {
-    return 'hello,ThinkPHP5!';
+    return 'hello, in side';
 });
 
 Route::get('hello/:name', 'index/hello');
 
-Route::resource('author', 'Author');
-Route::resource('category', 'Category');
-Route::resource('comment', 'Comment');
-Route::resource('article', 'Article');
+Route::resource('author', 'Author')->except(['index']);
+Route::resource('category', 'Category')->except(['index']);
+Route::resource('comment', 'Comment')->except(['index']);
+Route::resource('article', 'article')->except(['index']);
+
+// batch save
 Route::post('article/batch', 'Article/batchSave');
 
+// 登陆路由
 Route::post('login', 'Auth/login');
 Route::post('logout', 'Auth/logout');
+// 需要做分页的路由
+Route::get('article/[:page]/[:rowSize]', 'Article/index');
+Route::get('author/[:page]/[:rowSize]', 'Author/index');
+Route::get('category/[:page]/[:rowSize]', 'Category/index');
+Route::get('comment/[:page]/[:rowSize]', 'Comment/index');
 
+Route::post('checkAuthorName', 'Author/checkName');
 
 return [
 
