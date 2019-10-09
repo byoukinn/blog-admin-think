@@ -39,9 +39,10 @@ class Author
 
     public function update($id)
     {
+
         // 修改
         try {
-            $result = mAuthor::where(['id' => $id])->update();
+            $result = mAuthor::where(['id' => $id])->update(input('data'));
         } catch (PDOException $e) {
         } catch (Exception $e) {
         }

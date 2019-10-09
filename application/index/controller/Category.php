@@ -24,7 +24,6 @@ class Category
         } catch (DbException $e) {
         }
         return error('列表失败');
-
     }
 
     public function create()
@@ -41,7 +40,7 @@ class Category
     {
         // 修改
         try {
-            $result = mCategory::where(['id' => $id])->update();
+            $result = mCategory::where(['id' => $id])->update(input('data'));
         } catch (PDOException $e) {
         } catch (Exception $e) {
         }
@@ -54,7 +53,7 @@ class Category
         $data = Request::param('data');
         $author = new mCategory;
         // 验证表单
-        $validate = new \app\index\validate\Register;
+        $validate = new \app\index\validate\Category;
         if ($validate->check($data)) {
             try {
                 $result = $author->data($data)->save();

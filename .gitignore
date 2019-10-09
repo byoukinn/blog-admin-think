@@ -4,5 +4,6 @@
 *.log
 thinkphp
 .env
+!bk-blog-admin.sql
 *.sql
 .DS_Store

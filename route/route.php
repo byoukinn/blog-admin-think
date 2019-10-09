@@ -29,13 +29,13 @@ Route::post('article/batch', 'Article/batchSave');
 Route::post('login', 'Auth/login');
 Route::post('logout', 'Auth/logout');
 // 需要做分页的路由
-Route::get('article/[:page]/[:rowSize]', 'Article/index');
 Route::get('author/[:page]/[:rowSize]', 'Author/index');
 Route::get('category/[:page]/[:rowSize]', 'Category/index');
 Route::get('comment/[:page]/[:rowSize]', 'Comment/index');
 
 Route::post('checkAuthorName', 'Author/checkName');
-
+Route::post('checkCategoryName', 'Category/checkName');
+Route::post('getArticleWithParams', 'Article/withParams');
 return [
 
 ];

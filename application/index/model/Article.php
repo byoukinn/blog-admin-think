@@ -12,10 +12,13 @@ use think\Model;
 
 class Article extends Model
 {
-    protected $id, $title, $content, $desc, $cover, $catagory_id, $permission, $status, $like, $views, $create_time, $update_time;
+    protected $id, $title, $content, $desc, $cover, $author_id, $category_id, $permission, $status, $like, $views;
 
-    public function Category() {
-        return $this->hasOne('Category', 'catagory_id', 'id');
+    public function category() {
+        return $this->hasOne('Category', 'id', 'category_id');
+    }
+    public function author() {
+        return $this->hasOne('Author', 'id', 'author_id');
     }
 
     // 考虑如何载入树形结构的 Comments
