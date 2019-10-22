@@ -26,19 +26,19 @@ class Auth
                 $author = $model->where('username', $data['username'])->findOrFail();
                 if ($author['password'] == $data['password']) {
                     $model->login();
-                    return ['msg' => '登录成功', 'code' => 200];
+                    return success('登录成功');
                 } else {
-                    return ['msg' => '密码错误', 'code' => 10003];
+                    return error('密码错误');
                 }
             } catch (DataNotFoundException $e) {
-                return ['msg' => $e->getMessage(), 'code' => 10005];
+                return error($e->getMessage());
             } catch (ModelNotFoundException $e) {
-                return ['msg' => '该用户不存在', 'code' => 10004];
+                return error('该用户不存在');
             } catch (DbException $e) {
-                return ['msg' => '数据库出错 ' . $e->getMessage(), 'code' => 10006];
+                return error('数据库出错 ' . $e->getMessage());
             }
         } else {
-            return ['msg' => $validate->getError(), 'code' => 10001];
+            return error($validate->getError());
         }
 
     }

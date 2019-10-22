@@ -21,7 +21,7 @@ class Article
                 'author' => ['username', 'id'],
                 'category' => ['cname', 'id'],
             ])->select();
-            return ['code' => 200, 'msg' => '成功', 'data' => $data];
+            return error('成功', $data);
         } catch (DataNotFoundException $e) {
         } catch (ModelNotFoundException $e) {
         } catch (DbException $e) {
@@ -41,10 +41,10 @@ class Article
                 'author' => ['username', 'id'],
                 'category' => ['cname', 'id'],
             ])->limit(10)->select();
-            return ['code' => 200, 'msg' => '成功', 'data' => $data];
+            return error('成功', $data);
         } catch (DataNotFoundException $e) {
         } catch (ModelNotFoundException $e) {
-            return ['code' => 10008, 'msg' => '暂无数据', 'data' => []];
+            return error('暂无数据');
         } catch (DbException $e) {
         }
 
@@ -57,7 +57,7 @@ class Article
     public function delete($id)
     {
         $result =  mArticle::destroy($id);
-        return  ['msg' => $result ? '删除成功' : '删除失败'];
+        return $result ? success('删除成功') : error('删除失败');
     }
 
     public function update($id)
@@ -72,14 +72,14 @@ class Article
         } catch (Exception $e) {
             return  ['msg' => $e->getMessage(), 'code' => 10013];
         }
-        return  ['msg' => $result ? '更新成功' : '更新失败，没有修改任何字段', 'code' => $result ? 200 : 10009];
+        return $result ? success('更新成功') : error('更新失败，没有修改任何字段');
     }
     public function save()
     {
         $data = Request::param('data');
         $article = new mArticle();
         $result = $article->data($data)->save();
-        return ['msg' => $result ? '插入成功' : '插入失败', 'code' => $result ? 200 : 10009];
+        return $result ? success('插入成功') : error('插入失败');
     }
 
     public function batchSave()

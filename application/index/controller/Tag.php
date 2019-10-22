@@ -2,7 +2,7 @@
 
 namespace app\index\controller;
 
-use app\index\model\Comment as mComment;
+use app\index\model\Tag as mTag;
 use think\Controller;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -11,12 +11,12 @@ use think\exception\DbException;
 use think\exception\PDOException;
 use think\facade\Request;
 
-class Comment
+class Tag
 {
     public function index($page = 1, $rowSize = 20)
     {
         try {
-            $res = mComment::limit(($page - 1) * $rowSize, $rowSize)->select();
+            $res = mTag::limit(($page - 1) * $rowSize, $rowSize)->select();
             return success('成功', $res);
 
         } catch (DataNotFoundException $e) {
@@ -33,7 +33,7 @@ class Comment
 
     public function delete($id)
     {
-        $result = mComment::destroy($id);
+        $result = mTag::destroy($id);
         return success($result ? '删除成功' : '删除失败');
     }
 
@@ -41,7 +41,7 @@ class Comment
     {
         // 修改
         try {
-            $result = mComment::where(['id' => $id])->update();
+            $result = mTag::where(['id' => $id])->update();
         } catch (PDOException $e) {
         } catch (Exception $e) {
         }
@@ -51,15 +51,15 @@ class Comment
     public function save()
     {
         $data = Request::param('data');
-        $author = new mComment;
+        $author = new mTag;
         // 验证表单
         $validate = new \app\index\validate\Register;
         if ($validate->check($data)) {
             try {
                 $result = $author->data($data)->save();
-                return success($result ? '评论成功' : '评论失败');
+                return success($result ? '添加成功' : '添加失败');
             } catch (PDOException $e) {
-                return error('该分类已被评论过');
+                return error('该标签已被添加过');
             }
         } else {
             return error($validate->getError());
@@ -71,15 +71,14 @@ class Comment
         $data = Request::param("data");
         // 批量写入
         foreach ($data as $d) {
-            mComment::create($d);
+            mTag::create($d);
         }
     }
 
     public function read($id)
     {
         try {
-            $res = mComment::where('article_id', $id)->select()->toArray();
-
+            $res = mTag::where('author_id', $id)->select();
             return success('成功', $res);
         } catch (DataNotFoundException $e) {
             return error('查询失败', $e->getMessage());

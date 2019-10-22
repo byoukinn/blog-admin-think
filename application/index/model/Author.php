@@ -20,6 +20,10 @@ class Author extends Model
 
     }
 
+    public function article() {
+        return $this->hasMany('Article', 'author_id', 'id');
+    }
+
     public function logout() {
         session('AUTH', '');
     }
